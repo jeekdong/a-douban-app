@@ -13,25 +13,62 @@
         <m-cell title="提醒" icon>
         <img src="../../assets/images/ic_mine_notification.png" slot="icon">
         <a href="javascript:;" slot="cell-right"><img src="../../assets/images/ic_arrow_gray_small.png" alt=""></a>
-      </m-cell>
-      <m-cell title="设置">
+        </m-cell>
+        <m-cell title="设置">
         <a href="javascript:;" slot="cell-right"><img src="../../assets/images/ic_arrow_gray_small.png" alt=""></a>
-      </m-cell>
-      <m-cell-media author="作者：大象公会" column="来自栏目：广播精选" img="https://qnmob2.doubanio.com/img/files/file-1489047494.jpg">
-         <span slot="title">个人意见：为什么中国没有鲍勃·迪伦这样的民谣歌手</span>
-         <span slot="describe">我们这一代人的成长年代，真正的诗歌课从来都是缺席的。</span>
-       </m-cell-media>
+        </m-cell>
+        <div class="hot-wrap">
+            <m-cell title="热门" label="hot">
+                <!--<a href="javascript:;" slot="cell-right">更多<img src="../../assets/images/ic_arrow_gray_small.png" alt=""></a>-->
+            </m-cell>
+            <m-cell-media :author="item.target.author.name" :column="item.source_cn" :img="item.target.cover_url" v-for="(item,index) in hotData" :kry="item.id">
+              <span slot="title">{{item.title}}</span>
+              <span slot="describe">{{item.target.desc}}</span>
+            </m-cell-media>
     </div>
 </template>
 
 <script>
     import mHeader from '../../components/header'
     import mSwipe from '../../components/swipe'
+    import mCell from '../../components/cell'
+    import mCellMedia from '../../components/cell-media'
     export default {
         name: 'index',
         components: {
             mHeader,
-            mSwipe
+            mSwipe,
+            mCell,
+            mCellMedia
+        }
+        data(){
+          return {
+            recommendData: [],
+            hotData: []
+          }
+        },
+
+        created() {
+          this.fetchData();
+        },
+        methods: {
+          fetchData() {
+            this.axios.get('/api/homeData').then((response) =>{
+              let data = response.data.data.recommend_feeds;
+              let recommend = [];
+              let hot = [];
+              for(var i in data) {
+                if (data[i].card && data[i].card.name == '为你推荐') {
+                  recommend.push(data[i]);
+                } else {
+                  hot.push(data[i]);
+                }
+              }
+
+              this.recommendData = recommend;
+              this.hotData = hot;
+            })
+          }
         }
     }
 </script>
@@ -41,25 +78,53 @@
 .is-fixed ~ .page-content{
 padding-top:44px;
 }
-.slide01{
-    background: #41b883;
-    text-align: center;
-    line-height: 200px;
-    font-size: 30px;
-    color: #fff;
-}
-.slide02{
+header.m-header {
+    padding: 0 0 0 10px;
+  }
+  .top-search {
+    .search-wrap {
+      width: 100%;
+      height: 30px;
+      background: #fff;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #c0c0c0;
+      padding: 0 12px;
+      .placeholder {
+        flex: 1;
+        text-align: left;
+        padding-left: 12px;
+      }
+      img {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  .hot-wrap,
+  .recommend-wrap {
+    padding-top: 12px;
+  }
+  .slide01{
+    background:#41b883;
+    text-align:center;
+    line-height:200px;
+    font-size:30px;
+    color:#fff;
+  }
+  .slide02{
     background: #364a60;
     text-align: center;
     line-height: 200px;
     font-size: 30px;
     color: #fff;
-}
-.slide03{
+  }
+  .slide03{
     background: #ea6f5a;
     text-align: center;
     line-height: 200px;
     font-size: 30px;
     color: #fff;
-}
 </style>
