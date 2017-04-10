@@ -1,8 +1,15 @@
 <template>
     <div>
-        <m-header title="豆瓣app" :bg="true" fixed>
-            <a href="javascript:;" slot="right">分享</a>
-        </m-header>
+        <header class="m-header is-fixed is-bg top-search">
+          <div class="search-wrap">
+            <img src="../../assets/images/ic_search_gray.png" alt="">
+            <span class="placeholder">影视 图片 唱片 小组 舞台剧等</span>
+            <img src="../../assets/images/ic_scan_gray.png" alt="">
+          </div>
+          <div class="m-header-button is-right" style="text-align:center;width:50px">
+            <a href="javascript:;"><img class="m-icon-img" src="../../assets/images/ic_chat_white.png" /></a>
+          </div>
+        </header>
         <div class="page-content">
             <m-swipe swipeid="swipe01" :autoplay="1000" paginationDirection="right">
             <div class="swiper-slide slide01" slot="swiper-con">slide 01</div>
